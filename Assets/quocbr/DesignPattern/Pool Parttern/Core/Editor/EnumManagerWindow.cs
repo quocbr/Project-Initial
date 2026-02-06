@@ -21,9 +21,16 @@ public class EnumManagerWindow : EditorWindow
 {
     private const string POOL_ENUMS_PATH = "Assets/quocbr/DesignPattern/Pool Parttern/Core/PoolEnums.cs";
     private bool autoGenerateValue = true;
+    private string editingEnumName = "";
+    private int editingEnumValue;
+    private string editNewName = "";
+    private string editNewValue = "";
 
     // Colors
     private Color headerColor = new Color(0.3f, 0.5f, 0.8f);
+
+    // Edit mode
+    private bool isEditMode;
     private string newEnumName = "";
     private string newEnumValue = "";
     private Color particleTypeColor = new Color(1f, 0.8f, 0.3f);
@@ -56,7 +63,7 @@ public class EnumManagerWindow : EditorWindow
     public static void ShowWindow()
     {
         var window = GetWindow<EnumManagerWindow>("Enum Manager");
-        window.minSize = new Vector2(500, 610);
+        window.minSize = new Vector2(500, 650);
         window.Show();
     }
 
@@ -148,9 +155,20 @@ public class EnumManagerWindow : EditorWindow
 
                 GUILayout.FlexibleSpace();
 
-                // Delete button (không cho xóa None)
+                // Edit button (không cho edit None)
                 if (kvp.Key != "None")
                 {
+                    GUI.backgroundColor = new Color(0.5f, 0.8f, 1f);
+                    if (GUILayout.Button("✏️ Edit", GUILayout.Width(80)))
+                    {
+                        EnterEditMode(kvp.Key, kvp.Value);
+                    }
+
+                    GUI.backgroundColor = Color.white;
+
+                    GUILayout.Space(5);
+
+                    // Delete button
                     GUI.backgroundColor = new Color(1f, 0.5f, 0.5f);
                     if (GUILayout.Button("🗑️ Delete", GUILayout.Width(80)))
                     {
@@ -178,6 +196,13 @@ public class EnumManagerWindow : EditorWindow
 
     private void DrawAddNewEnum()
     {
+        // Nếu đang ở chế độ Edit
+        if (isEditMode)
+        {
+            DrawEditEnum();
+            return;
+        }
+
         EditorGUILayout.LabelField("Add New Value:", EditorStyles.boldLabel);
 
         EditorGUILayout.BeginVertical("box");
@@ -491,6 +516,195 @@ public class EnumManagerWindow : EditorWindow
         AssetDatabase.Refresh();
 
         Debug.Log($"🗑️ Deleted: {enumName} from {enumTypeName}");
+    }
+
+    /// <summary>
+    /// Vào chế độ Edit
+    /// </summary>
+    private void EnterEditMode(string enumName, int enumValue)
+    {
+        isEditMode = true;
+        editingEnumName = enumName;
+        editingEnumValue = enumValue;
+        editNewName = enumName;
+        editNewValue = enumValue.ToString();
+        scrollPosition = Vector2.zero;
+        Repaint();
+    }
+
+    /// <summary>
+    /// Thoát chế độ Edit
+    /// </summary>
+    private void ExitEditMode()
+    {
+        isEditMode = false;
+        editingEnumName = "";
+        editingEnumValue = 0;
+        editNewName = "";
+        editNewValue = "";
+        Repaint();
+    }
+
+    /// <summary>
+    /// Vẽ UI cho chế độ Edit
+    /// </summary>
+    private void DrawEditEnum()
+    {
+        // Header với màu khác để dễ nhận biết
+        GUI.backgroundColor = new Color(0.5f, 0.8f, 1f);
+        EditorGUILayout.LabelField($"✏️ Edit Mode: {editingEnumName}", EditorStyles.boldLabel);
+        GUI.backgroundColor = Color.white;
+
+        EditorGUILayout.BeginVertical("box");
+
+        // Hiển thị giá trị cũ
+        EditorGUILayout.LabelField("Current Values:", EditorStyles.boldLabel);
+        EditorGUILayout.BeginVertical("helpBox");
+        EditorGUILayout.LabelField($"Name: {editingEnumName}", EditorStyles.label);
+        EditorGUILayout.LabelField($"Value: {editingEnumValue}", EditorStyles.label);
+        EditorGUILayout.EndVertical();
+
+        GUILayout.Space(10);
+
+        // Nhập giá trị mới
+        EditorGUILayout.LabelField("New Values:", EditorStyles.boldLabel);
+
+        // Name
+        EditorGUILayout.BeginHorizontal();
+        EditorGUILayout.LabelField("New Name:", GUILayout.Width(100));
+        editNewName = EditorGUILayout.TextField(editNewName);
+        EditorGUILayout.EndHorizontal();
+
+        GUILayout.Space(5);
+
+        // Value
+        EditorGUILayout.BeginHorizontal();
+        EditorGUILayout.LabelField("New Value:", GUILayout.Width(100));
+        editNewValue = EditorGUILayout.TextField(editNewValue);
+        EditorGUILayout.EndHorizontal();
+
+        EditorGUILayout.HelpBox("💡 You can change name, value, or both", MessageType.Info);
+
+        GUILayout.Space(10);
+
+        // Preview changes
+        bool hasChanges = editNewName != editingEnumName || editNewValue != editingEnumValue.ToString();
+        // if (hasChanges)
+        // {
+        //     string changes = "";
+        //     if (editNewName != editingEnumName)
+        //         changes += $"Name: {editingEnumName} → {editNewName}\n";
+        //     if (editNewValue != editingEnumValue.ToString())
+        //         changes += $"Value: {editingEnumValue} → {editNewValue}";
+        //
+        //     EditorGUILayout.HelpBox($"📝 Changes:\n{changes}", MessageType.Warning);
+        // }
+
+        //GUILayout.Space(10);
+
+        // Buttons
+        EditorGUILayout.BeginHorizontal();
+
+        // Save button
+        GUI.backgroundColor = new Color(0.5f, 1f, 0.5f);
+        EditorGUI.BeginDisabledGroup(!hasChanges);
+        if (GUILayout.Button("💾 Save Changes", GUILayout.Height(40)))
+        {
+            UpdateEnumValue();
+        }
+
+        EditorGUI.EndDisabledGroup();
+        GUI.backgroundColor = Color.white;
+
+        // Cancel button
+        GUI.backgroundColor = new Color(1f, 0.8f, 0.5f);
+        if (GUILayout.Button("❌ Cancel", GUILayout.Width(100), GUILayout.Height(40)))
+        {
+            ExitEditMode();
+        }
+
+        GUI.backgroundColor = Color.white;
+
+        EditorGUILayout.EndHorizontal();
+
+        EditorGUILayout.EndVertical();
+    }
+
+    /// <summary>
+    /// Cập nhật giá trị enum
+    /// </summary>
+    private void UpdateEnumValue()
+    {
+        // Validation
+        if (string.IsNullOrWhiteSpace(editNewName))
+        {
+            EditorUtility.DisplayDialog("Error", "Name cannot be empty!", "OK");
+            return;
+        }
+
+        if (!Regex.IsMatch(editNewName, @"^[a-zA-Z_][a-zA-Z0-9_]*$"))
+        {
+            EditorUtility.DisplayDialog("Error", "Invalid name! Use only letters, numbers, and underscores.", "OK");
+            return;
+        }
+
+        if (!int.TryParse(editNewValue, out int newValue))
+        {
+            EditorUtility.DisplayDialog("Error", "Value must be an integer!", "OK");
+            return;
+        }
+
+        // Read file
+        if (!File.Exists(POOL_ENUMS_PATH))
+        {
+            EditorUtility.DisplayDialog("Error", "PoolEnums.cs not found!", "OK");
+            return;
+        }
+
+        string fileContent = File.ReadAllText(POOL_ENUMS_PATH);
+        string enumTypeName = selectedEnumType.ToString();
+
+        // Check duplicate name (nếu đổi tên)
+        if (editNewName != editingEnumName)
+        {
+            var allEnums = GetCurrentEnumValues(enumTypeName);
+            if (allEnums.ContainsKey(editNewName))
+            {
+                EditorUtility.DisplayDialog("Error", $"'{editNewName}' already exists!", "OK");
+                return;
+            }
+        }
+
+        // Replace pattern: tìm enum cũ và thay thế
+        string oldPattern = $@"{editingEnumName}\s*=\s*{editingEnumValue}";
+        string newPattern = $"{editNewName} = {newValue}";
+
+        if (!Regex.IsMatch(fileContent, oldPattern))
+        {
+            EditorUtility.DisplayDialog("Error", $"Cannot find '{editingEnumName} = {editingEnumValue}'", "OK");
+            return;
+        }
+
+        // Replace
+        string newContent = Regex.Replace(fileContent, oldPattern, newPattern);
+
+        // Write file
+        File.WriteAllText(POOL_ENUMS_PATH, newContent);
+
+        // Refresh
+        AssetDatabase.Refresh();
+
+        string changeLog = "";
+        if (editNewName != editingEnumName)
+            changeLog += $"Name: {editingEnumName} → {editNewName}\n";
+        if (newValue != editingEnumValue)
+            changeLog += $"Value: {editingEnumValue} → {newValue}";
+
+        Debug.Log($"✏️ Updated enum in {enumTypeName}:\n{changeLog}");
+        EditorUtility.DisplayDialog("Success!", $"Updated successfully!\n\n{changeLog}", "OK");
+
+        // Exit edit mode
+        ExitEditMode();
     }
 }
 #endif

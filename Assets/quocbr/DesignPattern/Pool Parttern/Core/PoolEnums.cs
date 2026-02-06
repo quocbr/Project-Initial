@@ -20,7 +20,9 @@ public enum EnumType
 /// </summary>
 public enum PoolType
 {
-    None = 0
+    None = 0,
+
+  rt = 1
 }
 
 /// <summary>
