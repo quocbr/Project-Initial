@@ -1,14 +1,26 @@
 # Quocbr Module Installer
 
-## Tạo bộ cài
+## Cài panel vào project đích
+
+### Qua Git URL (Unity 6)
+
+Mở **Window > Package Manager**, chọn **+ > Add package from git URL...** và nhập:
+
+```text
+https://github.com/quocbr/Project-Initial.git?path=/Assets/quocbr/Installer#v0.4
+```
+
+URL này lấy đúng thư mục installer tại tag `v0.4`. Có thể bỏ `#v0.4` để lấy commit mới nhất từ nhánh mặc định. Máy chạy Unity cần có Git trong `PATH`. Package chỉ chứa panel; hãy clone repository về máy để làm project nguồn khi chọn module.
+
+### Qua file `.unitypackage`
 
 Trong project nguồn, mở Unity và chọn **Tools > Quocbr > Export Installer Package**.
 Chỉ thư mục `Assets/quocbr/Installer` được xuất. Import file `.unitypackage`
-vừa tạo vào project đích.
+vừa tạo vào project đích. Chỉ dùng một trong hai cách cài panel trong cùng project.
 
 ## Cài module
 
-1. Mở **Tools > Quocbr > Module Installer** trong project đích.
+1. Sau khi cài panel, mở **Tools > Quocbr > Module Installer** trong project đích.
 2. Chọn thư mục gốc của project nguồn, nơi có `Assets/quocbr`. Project nguồn
    phải khác project đích đang mở.
 3. Tìm kiếm hoặc chọn nhóm module, rồi bấm vào bất kỳ vị trí nào trên thẻ

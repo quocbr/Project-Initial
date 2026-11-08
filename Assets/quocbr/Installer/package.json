@@ -1,0 +1,13 @@
+{
+  "name": "com.quocbr.module-installer",
+  "version": "0.4.0",
+  "displayName": "Quocbr Module Installer",
+  "description": "Select, install, and remove reusable Quocbr modules in a Unity project. External plugin requirements are shown in the Editor window.",
+  "unity": "6000.0",
+  "author": {
+    "name": "quocbr",
+    "url": "https://github.com/quocbr/Project-Initial"
+  },
+  "documentationUrl": "https://github.com/quocbr/Project-Initial/blob/main/Assets/quocbr/Installer/README.md",
+  "keywords": ["quocbr", "modules", "installer", "editor"]
+}

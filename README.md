@@ -8,7 +8,7 @@ Project này tập hợp các script, prefab và công cụ Unity có thể tái
 2. Để làm việc với **toàn bộ project**, cài các SDK bên ngoài mà mã trong `Assets/quocbr/SDK` sử dụng theo mục [Phụ thuộc](#phụ-thuộc). Một số SDK không được lưu trong Git nên bản clone mới có thể báo lỗi biên dịch cho đến khi cài đủ.
 3. Mở `Assets/Scenes/SampleScene.unity` nếu muốn xem scene mẫu. Mã tái sử dụng nằm trong `Assets/quocbr`.
 
-Nếu chỉ muốn **lấy module sang project khác**, project nguồn có thể là một bản clone trên ổ đĩa. Import installer vào project đích rồi trỏ panel đến thư mục bản clone; không cần mở project nguồn trong Unity.
+Nếu chỉ muốn **lấy module sang project khác**, project nguồn có thể là một bản clone trên ổ đĩa. Cài installer vào project đích rồi trỏ panel đến thư mục bản clone; không cần mở project nguồn trong Unity.
 
 ## Các phần chính
 
@@ -26,13 +26,13 @@ Danh sách module, các file được sao chép và phụ thuộc tương ứng 
 
 ## Tích hợp vào project khác
 
-1. Chuẩn bị gói `Quocbr-Module-Installer-v0.3.unitypackage`: tải từ GitHub Release khi asset đã được đính kèm, hoặc mở project nguồn đã cài đủ phụ thuộc và chọn **Tools > Quocbr > Export Installer Package** để tự export. File `.unitypackage` không được lưu trực tiếp trong Git.
-2. Import gói vào project đích, rồi mở **Tools > Quocbr > Module Installer**.
+1. Trong project đích, cài panel qua **Window > Package Manager > + > Add package from git URL...** bằng URL `https://github.com/quocbr/Project-Initial.git?path=/Assets/quocbr/Installer#v0.4` (Unity 6, cần Git trong `PATH`). Bạn cũng có thể dùng gói `.unitypackage` v0.3 hoặc tự export từ project nguồn đã cài đủ phụ thuộc. Chỉ dùng một cách cài panel trong cùng project.
+2. Mở **Tools > Quocbr > Module Installer**.
 3. Chọn thư mục project nguồn. Bấm vào thẻ của những module muốn dùng; panel sẽ tự thêm module phụ thuộc.
 4. Kiểm tra danh sách plugin. Panel tự cài plugin được hỗ trợ; những plugin cần cài thủ công có liên kết đến nguồn tương ứng.
 5. Nhấn **Cài ... module**. Khi cần gỡ, dùng tab **Gỡ module** trong cùng panel.
 
-Panel chép file cùng `.meta` để giữ GUID, kiểm tra xung đột trước khi chép và lưu danh sách asset do nó quản lý trong project đích. Khi gỡ, panel giữ lại asset dùng chung và plugin bên ngoài. Xem [`hướng dẫn installer`](Assets/quocbr/Installer/README.md) và [`ghi chú v0.3`](Releases/v0.3.md) để biết các giới hạn hiện tại.
+Panel chép file cùng `.meta` để giữ GUID, kiểm tra xung đột trước khi chép và lưu danh sách asset do nó quản lý trong project đích. Khi gỡ, panel giữ lại asset dùng chung và plugin bên ngoài. Xem [`hướng dẫn installer`](Assets/quocbr/Installer/README.md) và [`ghi chú v0.4`](Releases/v0.4.md) để biết cách cài qua Git URL và các giới hạn hiện tại.
 
 ## Phụ thuộc
 

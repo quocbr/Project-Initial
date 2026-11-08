@@ -70,6 +70,12 @@ namespace Quocbr.Installer
             Debug.Log("[Quocbr Installer] Exported " + output);
         }
 
+        [MenuItem("Tools/Quocbr/Export Installer Package", true)]
+        private static bool CanExportInstaller()
+        {
+            return AssetDatabase.IsValidFolder(InstallerAssetPath);
+        }
+
         [InitializeOnLoadMethod]
         private static void ResumeAfterReload()
         {
