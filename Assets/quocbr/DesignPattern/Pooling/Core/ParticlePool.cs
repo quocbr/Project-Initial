@@ -6,8 +6,10 @@ Description: Particle Pool - Pool chuyên biệt cho ParticleSystem effects
 */
 
 using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 /// <summary>
 /// Static pool manager cho ParticleSystem effects

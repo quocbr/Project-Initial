@@ -19,7 +19,7 @@ using UnityEngine;
 /// </summary>
 public class EnumManagerWindow : EditorWindow
 {
-    private const string POOL_ENUMS_PATH = "Assets/quocbr/DesignPattern/Pool Parttern/Core/PoolEnums.cs";
+    private const string POOL_ENUMS_PATH = "Assets/quocbr/DesignPattern/Pooling/Core/PoolEnums.cs";
     private bool autoGenerateValue = true;
     private string editingEnumName = "";
     private int editingEnumValue;

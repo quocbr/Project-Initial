@@ -229,7 +229,7 @@ public class ExampleBullet : GameUnit
         // Reset physics
         if (rb != null)
         {
-            rb.velocity = Vector3.zero;
+            rb.linearVelocity = Vector3.zero;
             rb.angularVelocity = Vector3.zero;
         }
         
@@ -258,7 +258,7 @@ public class ExampleBullet : GameUnit
         // Cleanup
         if (rb != null)
         {
-            rb.velocity = Vector3.zero;
+            rb.linearVelocity = Vector3.zero;
         }
     }
 }
